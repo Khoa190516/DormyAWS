@@ -10,4 +10,13 @@ export default defineConfig({
       process.env.VITE_BASE_API_URL
     ),
   },
+  server: {
+    host: true,
+    strictPort: true,
+    port: 5174,
+    origin: "http://0.0.0.0:5174",
+    watch: {
+      usePolling: true,
+    },
+  },
 });

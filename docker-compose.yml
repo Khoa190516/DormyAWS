@@ -1,14 +1,14 @@
-version: '3.9'
+version: "3.9"
 
 services:
   db:
-    container_name: db_container
+    container_name: database_container
     image: postgres:latest
     # restart: always
     environment:
-      POSTGRES_DB: mydatabase
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword 
+      POSTGRES_DB: my_database
+      POSTGRES_USER: my_user
+      POSTGRES_PASSWORD: my_password
     volumes:
       - pg_data:/var/lib/postgresql/data
     ports:
@@ -17,7 +17,7 @@ services:
       - mynetwork
 
   pgadmin:
-    container_name: pgadmin_container
+    container_name: pgadmin4_container
     image: dpage/pgadmin4:latest
     # restart: always
     environment:
@@ -29,8 +29,11 @@ services:
       - mynetwork
     depends_on:
       - db
-  
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
   api:
+    container_name: dormy_api_container
     build:
       context: ./thue
       dockerfile: Dockerfile
@@ -39,24 +42,33 @@ services:
     depends_on:
       - db
     environment:
-      ASPNETCORE_ENVIRONMENT: "Docker" 
+      ASPNETCORE_ENVIRONMENT: "Docker"
       ASPNETCORE_URLS: "http://+:80"
     networks:
       - mynetwork
 
   web:
+    container_name: dormy_web_container
     build:
       context: ./thuefe
       dockerfile: Dockerfile
+      args:
+        VITE_BASE_API_URL: http://localhost:5000/api/
     ports:
-      - 3001:3000
+      - 5174:80
     environment:
       - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - react_node_modules:/app/node_modules
     networks:
       - mynetwork
+    depends_on:
+      - api
 
 volumes:
   pg_data:
+  react_node_modules:
+  pgadmin_data:
 
 networks:
   mynetwork:

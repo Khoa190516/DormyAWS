@@ -13,6 +13,10 @@ RUN yarn install
 # Copy the rest of the application code to the container
 COPY . .
 
+ARG VITE_BASE_API_URL
+ENV VITE_BASE_API_URL=$VITE_BASE_API_URL
+RUN echo "VITE_BASE_API_URL=$VITE_BASE_API_URL"
+
 # Build the Vite project
 RUN yarn build
 
