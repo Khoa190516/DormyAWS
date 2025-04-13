@@ -53,7 +53,7 @@ services:
       context: ./thuefe
       dockerfile: Dockerfile
       args:
-        VITE_BASE_API_URL: http://localhost:5000/api/
+        VITE_BASE_API_URL: http://100.26.108.191:5000/api/
     ports:
       - 5174:80
     environment:
